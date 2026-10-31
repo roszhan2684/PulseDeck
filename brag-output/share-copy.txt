@@ -1,0 +1,1 @@
+PulseDeck is live: one tiny daily challenge for your friend group, a physics swipe deck, realtime chat and a leaderboard that physically reshuffles. Built with React Native, Expo, Reanimated and Supabase — try the real app in an iPhone frame right in your browser: https://pulsedeck-ten.vercel.app

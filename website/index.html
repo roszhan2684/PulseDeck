@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PulseDeck — Tiny daily challenges for your favorite people</title>
+  <meta name="description" content="PulseDeck is a motion-first social challenge app for close friend groups. One prompt a day, post in 30 seconds, swipe, react, vote and keep the streak alive. Try the live iPhone demo." />
+  <meta name="theme-color" content="#09090F" />
+  <meta property="og:title" content="PulseDeck — Tiny daily challenges for your favorite people" />
+  <meta property="og:description" content="A motion-first iOS app built with React Native, Expo, Reanimated and Supabase. Try the live demo in your browser." />
+  <meta property="og:image" content="/assets/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/springs.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="#top" aria-label="PulseDeck home"><span class="logo">⚡</span>PulseDeck</a>
+    <nav aria-label="Primary">
+      <a href="#walkthrough">Walkthrough</a>
+      <a href="#film">Film</a>
+      <a href="#features">Features</a>
+      <a href="#motion">Motion</a>
+      <a href="#engineering">Engineering</a>
+    </nav>
+    <a class="btn btn-ghost small" href="https://github.com/roszhan2684/PulseDeck" target="_blank" rel="noopener">GitHub</a>
+  </header>
+
+  <main id="top">
+    <section class="hero" id="walkthrough">
+      <div class="hero-copy">
+        <span class="pill"><span class="dot"></span> Live demo · iOS app built with React Native</span>
+        <h1>Tiny daily challenges for your <span class="grad">favorite people.</span></h1>
+        <p class="lede">One prompt a day. Post in 30 seconds. Swipe through your crew’s answers, react, vote, and keep the streak alive.</p>
+        <div class="cta-row">
+          <button class="btn btn-primary" id="tour-play" type="button">▶ Auto-play the tour</button>
+          <a class="btn btn-ghost" href="#film">Watch the 20-second film</a>
+        </div>
+
+        <ol class="steps" id="steps" aria-label="Guided walkthrough. Each step drives the live app.">
+          <li><button type="button" data-href="/" data-match="^/$" data-color="violet"><b>Today’s challenge</b><span>A hero card with five designed states and a live countdown. Pulse rings show who has posted.</span></button></li>
+          <li><button type="button" data-href="/challenge/c_desk" data-match="^/challenge/c_" data-color="pink"><b>Swipe the deck</b><span>Drag a card. It follows your cursor, tilts, and commits on distance or velocity. Double-click to 🔥, hold for the reaction menu.</span></button></li>
+          <li><button type="button" data-href="/challenge/submit?challengeId=c_desk" data-match="^/challenge/submit" data-color="amber"><b>Post a response</b><span>Photo, video or a hot take, with honest upload states: preparing, uploading, processing.</span></button></li>
+          <li><button type="button" data-href="/chat" data-match="^/chat" data-color="blue"><b>Realtime chat</b><span>Send a message and a friend starts typing back. Swipe a bubble to reply. Messages appear instantly.</span></button></li>
+          <li><button type="button" data-href="/leaderboard" data-match="^/leaderboard" data-color="lime"><b>Live leaderboard</b><span>Scores land every few seconds. Rows physically reorder and digits roll.</span></button></li>
+          <li><button type="button" data-href="/profile" data-match="^/profile" data-color="violet"><b>Profile</b><span>Collapsing parallax header, rolling stats and a snapping badge carousel.</span></button></li>
+          <li><button type="button" data-flow="onboarding" data-href="/onboarding" data-match="^/onboarding" data-color="pink"><b>Onboarding</b><span>Seven animated steps. Try invite code <code>4BFAM1</code>.</span></button></li>
+          <li><button type="button" data-href="/dev/motion-lab" data-match="^/dev/motion-lab" data-color="blue"><b>Motion Lab</b><span>Every animation in the app, with live spring sliders.</span></button></li>
+        </ol>
+      </div>
+
+      <div class="phone-col">
+        <div class="phone-wrap" id="phone-wrap">
+          <div class="phone" role="region" aria-label="Interactive PulseDeck demo running in an iPhone frame">
+            <div class="btn-side l1"></div><div class="btn-side l2"></div><div class="btn-side l3"></div><div class="btn-side r1"></div>
+            <div class="screen">
+              <div class="statusbar" aria-hidden="true">
+                <span class="time">9:41</span>
+                <span class="island"></span>
+                <span class="icons">
+                  <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+                  <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.5c2.3 0 4.4.9 6 2.4l1.2-1.3A10.4 10.4 0 0 0 8 .7 10.4 10.4 0 0 0 .8 3.6L2 4.9a8.6 8.6 0 0 1 6-2.4Zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.7 6.7 0 0 0 8 4.3a6.7 6.7 0 0 0-4.6 1.8l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3ZM8 9.6l1.9-2a2.8 2.8 0 0 0-3.8 0l1.9 2Z"/></svg>
+                  <span class="battery"><span></span></span>
+                </span>
+              </div>
+              <iframe id="app" src="/demo/" title="PulseDeck live demo" loading="eager" allow="clipboard-write"></iframe>
+              <div class="home-ind" aria-hidden="true"></div>
+              <div class="loading" id="loading"><span class="logo big">⚡</span><span>Loading the live app…</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="phone-note">This is the real app, compiled for the web with React Native Web and running on demo data. <button type="button" class="link" id="reset">Reset demo</button></p>
+      </div>
+    </section>
+
+    <section class="film" id="film">
+      <div class="section-head">
+        <span class="eyebrow">The launch film</span>
+        <h2>Twenty seconds. One very messy desk.</h2>
+      </div>
+      <div class="video-shell">
+        <video id="film-video" controls playsinline preload="metadata" poster="/assets/film-poster.jpg">
+          <source src="/assets/pulsedeck-launch.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="section-head">
+        <span class="eyebrow">What’s inside</span>
+        <h2>Built like a small team obsessed over it.</h2>
+      </div>
+      <div class="bento">
+        <article class="card c-violet span2">
+          <span class="tag">Swipe deck</span>
+          <h3>Physics, not slideshows.</h3>
+          <p>One shared position drives every card on the UI thread. Velocity-aware commits, rubber-banding at the edges, swipe back to the previous card.</p>
+          <img src="/assets/feed.png" alt="Swipe deck screen" loading="lazy" />
+        </article>
+        <article class="card c-pink">
+          <span class="tag">Reactions</span>
+          <h3>🔥 Double-tap. 😂 Hold. 💀 Burst.</h3>
+          <p>Optimistic updates with rollback. Double-tap only adds, so rapid taps never undo a reaction.</p>
+        </article>
+        <article class="card c-blue">
+          <span class="tag">Realtime chat</span>
+          <h3>Instant, then confirmed.</h3>
+          <p>Client IDs reconcile optimistic and server messages. No duplicates, tap to retry, reconnect backfill.</p>
+        </article>
+        <article class="card c-lime">
+          <span class="tag">Leaderboard</span>
+          <h3>Rows that physically move.</h3>
+          <p>Live score events, competition ranking, rolling digits and podium styling for the week’s leader.</p>
+        </article>
+        <article class="card c-amber">
+          <span class="tag">Onboarding</span>
+          <h3>Seven steps, zero friction.</h3>
+          <p>Spring progress, async username checks, join-by-code, and a coordinated hand-off into the app.</p>
+        </article>
+        <article class="card c-green span2">
+          <span class="tag">Accessibility</span>
+          <h3>Reduced Motion is a first-class mode.</h3>
+          <p>Particles, parallax and rotation step aside for gentle fades while every action keeps working. VoiceOver labels on everything, gesture-free alternatives, 44 pt touch targets, 4.6:1+ contrast.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="motion" id="motion">
+      <div class="section-head">
+        <span class="eyebrow">Motion system</span>
+        <h2>Four springs. Zero magic numbers.</h2>
+        <p class="sub">These balls use the app’s exact spring tokens from <code>theme/motion.ts</code>, converted to CSS. Click to replay.</p>
+      </div>
+      <div class="springs" id="springs">
+        <button type="button" class="spring" style="--ease: var(--spring-snappy); --dur: var(--spring-snappy-ms)"><span class="name">snappy</span><span class="use">Buttons</span><span class="track"><span class="ball"></span></span><span class="meta">damping 20 · stiffness 420</span></button>
+        <button type="button" class="spring" style="--ease: var(--spring-standard); --dur: var(--spring-standard-ms)"><span class="name">standard</span><span class="use">Cards</span><span class="track"><span class="ball"></span></span><span class="meta">damping 22 · stiffness 240</span></button>
+        <button type="button" class="spring" style="--ease: var(--spring-soft); --dur: var(--spring-soft-ms)"><span class="name">soft</span><span class="use">Modals</span><span class="track"><span class="ball"></span></span><span class="meta">damping 26 · stiffness 150</span></button>
+        <button type="button" class="spring" style="--ease: var(--spring-playful); --dur: var(--spring-playful-ms)"><span class="name">playful</span><span class="use">Reactions</span><span class="track"><span class="ball"></span></span><span class="meta">damping 9 · stiffness 260</span></button>
+      </div>
+      <div class="screens" aria-label="App screenshots">
+        <img src="/assets/home.png" alt="Home with today’s challenge" loading="lazy" />
+        <img src="/assets/chat.png" alt="Realtime group chat" loading="lazy" />
+        <img src="/assets/leaderboard.png" alt="Live leaderboard" loading="lazy" />
+        <img src="/assets/profile.png" alt="Profile with collapsing header" loading="lazy" />
+        <img src="/assets/group.png" alt="Group screen" loading="lazy" />
+        <img src="/assets/motion-lab.png" alt="Motion Lab" loading="lazy" />
+      </div>
+    </section>
+
+    <section class="eng" id="engineering">
+      <div class="section-head">
+        <span class="eyebrow">Engineering</span>
+        <h2>Production-shaped, end to end.</h2>
+      </div>
+      <div class="stats">
+        <div><b>13</b><span>motion primitives</span></div>
+        <div><b>17</b><span>UI primitives</span></div>
+        <div><b>55</b><span>Jest tests passing</span></div>
+        <div><b>16/16</b><span>RLS &amp; RPC checks</span></div>
+        <div><b>14</b><span>tables under Row Level Security</span></div>
+        <div><b>−35%</b><span>iOS export size (font subsetting)</span></div>
+      </div>
+      <div class="arch">
+        <div class="arch-card"><h3>One data boundary</h3><p>Screens call feature hooks; hooks call a <code>Backend</code> interface implemented twice: an in-memory demo backend (what you’re using above) and Supabase.</p></div>
+        <div class="arch-card"><h3>Security from day one</h3><p>RLS on every table, ownership from <code>auth.uid()</code>, server-side RPCs for joining groups and voting, storage writes locked to your own folder.</p></div>
+        <div class="arch-card"><h3>Every state designed</h3><p>Skeletons that match the final layout, category-specific errors with recovery actions, and a flaky-network switch to demo retries and rollbacks.</p></div>
+      </div>
+      <ul class="chips" aria-label="Tech stack">
+        <li>Expo SDK 58</li><li>React Native 0.88</li><li>TypeScript strict</li><li>Expo Router</li><li>Reanimated 4</li><li>Gesture Handler 3</li><li>React Compiler</li><li>TanStack Query</li><li>Zustand</li><li>Supabase</li><li>Postgres RLS</li><li>Realtime</li><li>Jest</li><li>Maestro</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <a class="brand" href="#top"><span class="logo">⚡</span>PulseDeck</a>
+      <p>Designed and engineered by <a href="https://roszhan.vercel.app" target="_blank" rel="noopener">Roszhan Raj</a>. Demo data and photography from Unsplash.</p>
+    </div>
+    <div class="footer-links">
+      <a class="btn btn-ghost small" href="https://github.com/roszhan2684/PulseDeck" target="_blank" rel="noopener">Source on GitHub</a>
+      <a class="btn btn-primary small" href="https://roszhan.vercel.app" target="_blank" rel="noopener">Portfolio</a>
+    </div>
+  </footer>
+  <script src="/main.js" defer></script>
+</body>
+</html>

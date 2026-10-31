@@ -1,0 +1,22 @@
+# Maestro (free, open source): maestro test .maestro/core-loop.yaml
+# Run the app in demo mode. Covers the core loop: demo sign-in → challenge → text post → deck → react → chat.
+appId: host.exp.Exponent
+---
+- launchApp
+- tapOn: "Explore the demo crew →"
+- assertVisible: "Today’s challenge"
+- tapOn: "Answer the challenge"
+- tapOn: "Text"
+- tapOn: "Your answer"
+- inputText: "My desk is a beanbag and a dream"
+- tapOn: "Post response"
+- assertVisible: "Posted!"
+- tapOn: "See the deck"
+- tapOn: "Next response"
+- tapOn: "😂 0"
+- back
+- tapOn: "Chat"
+- tapOn: "Message"
+- inputText: "who's down for tacos"
+- tapOn: "Send message"
+- assertVisible: "who's down for tacos"

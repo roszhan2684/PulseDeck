@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, height=1080" />
+  <title>PulseDeck — launch film</title>
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script src="assets/rms.js"></script>
+  <style>
+    @font-face { font-family: 'Bricolage'; font-weight: 700; src: url('assets/fonts/BricolageGrotesque_700Bold.ttf') format('truetype'); }
+    @font-face { font-family: 'Bricolage'; font-weight: 800; src: url('assets/fonts/BricolageGrotesque_800ExtraBold.ttf') format('truetype'); }
+    @font-face { font-family: 'Inter'; font-weight: 400; src: url('assets/fonts/Inter_400Regular.ttf') format('truetype'); }
+    @font-face { font-family: 'Inter'; font-weight: 500; src: url('assets/fonts/Inter_500Medium.ttf') format('truetype'); }
+    @font-face { font-family: 'Inter'; font-weight: 600; src: url('assets/fonts/Inter_600SemiBold.ttf') format('truetype'); }
+    @font-face { font-family: 'Inter'; font-weight: 700; src: url('assets/fonts/Inter_700Bold.ttf') format('truetype'); }
+    @font-face { font-family: 'Apple Color Emoji'; src: local('Apple Color Emoji'); }
+    :root {
+      --bg: #09090f; --surface: #13131c; --raised: #1b1b27; --border: #262635; --border2: #383849;
+      --text: #f4f4f8; --muted: #a9a9bc; --subtle: #7a7a90;
+      --violet: #7c5cff; --pink: #ff4f8b; --lime: #c8ff4d; --gold: #ffd15c; --blue: #4cc9f0;
+      --pulse: linear-gradient(135deg, #7c5cff, #ff4f8b);
+      --emoji: 'Apple Color Emoji';
+    }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', var(--emoji), sans-serif; }
+    #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+    .clip { position: absolute; inset: 0; }
+    .display { font-family: 'Bricolage', var(--emoji), sans-serif; font-weight: 800; letter-spacing: -0.035em; line-height: 0.98; }
+    .grad { background: var(--pulse); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .overline { font: 600 28px 'Inter'; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); }
+
+    /* Background glow (audio-reactive) */
+    .glow { position: absolute; border-radius: 50%; filter: blur(120px); }
+    #glow-a { width: 900px; height: 900px; left: 900px; top: -260px; background: rgba(124, 92, 255, 0.55); }
+    #glow-b { width: 700px; height: 700px; left: -200px; top: 520px; background: rgba(255, 79, 139, 0.32); }
+
+    /* Brand mark */
+    .brand { position: absolute; left: 72px; top: 56px; display: flex; align-items: center; gap: 14px; font: 700 30px 'Bricolage'; }
+    .logo { width: 46px; height: 46px; border-radius: 14px; background: var(--pulse); display: grid; place-items: center; font-size: 24px; }
+
+    /* Phone */
+    .phone { position: absolute; width: 433px; height: 892px; padding: 20px; box-sizing: border-box; border-radius: 74px;
+      background: linear-gradient(145deg, #3a3a46, #15151c 40%, #2a2a34);
+      box-shadow: 0 0 0 1.5px #4a4a58 inset, 0 60px 140px -30px rgba(124, 92, 255, 0.55), 0 30px 60px -20px rgba(0, 0, 0, 0.9); }
+    .screen { position: relative; width: 393px; height: 852px; border-radius: 55px; overflow: hidden; background: var(--bg); }
+    .sb { position: absolute; inset: 0 0 auto; height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 4px 34px 0 46px; font: 600 16px 'Inter'; z-index: 5; }
+    .island { position: absolute; left: 134px; top: 11px; width: 124px; height: 36px; border-radius: 20px; background: #000; }
+    .sbi { display: flex; gap: 6px; align-items: center; }
+    .bat { width: 25px; height: 12px; border-radius: 4px; border: 1.5px solid rgba(255, 255, 255, 0.6); padding: 1.5px; box-sizing: border-box; }
+    .bat i { display: block; width: 100%; height: 100%; border-radius: 1.5px; background: #2ee59d; }
+    .hi { position: absolute; left: 130px; bottom: 8px; width: 134px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.85); z-index: 5; }
+    .appbar { position: absolute; top: 54px; left: 0; right: 0; height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 18px; font: 600 16px 'Inter'; }
+    .iconbtn { width: 40px; height: 40px; border-radius: 20px; background: var(--raised); display: grid; place-items: center; color: var(--muted); font-size: 18px; }
+
+    /* Scene 1: challenge card */
+    .s1-copy { position: absolute; left: 150px; top: 330px; width: 820px; }
+    .s1-copy .display { font-size: 132px; }
+    .s1-line { display: block; }
+    .ccard { position: absolute; left: 1060px; top: 150px; width: 620px; height: 780px; border-radius: 48px; overflow: hidden; background: var(--surface);
+      border: 1.5px solid var(--border2); box-shadow: 0 50px 140px -30px rgba(124, 92, 255, 0.6); }
+    .ccard img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(124, 92, 255, 0.3) 0%, rgba(9, 9, 15, 0.45) 22%, rgba(9, 9, 15, 0.9) 48%, rgba(9, 9, 15, 0.99) 75%); }
+    .badge { position: absolute; left: 34px; top: 34px; display: flex; align-items: center; gap: 10px; padding: 9px 18px; border-radius: 999px; background: rgba(9, 9, 15, 0.65); color: var(--lime); font: 700 18px 'Inter'; letter-spacing: 0.12em; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--lime); }
+    .emojichip { position: absolute; right: 34px; top: 28px; width: 76px; height: 76px; border-radius: 38px; background: rgba(9, 9, 15, 0.6); display: grid; place-items: center; font-size: 38px; }
+    .cbody { position: absolute; left: 44px; right: 44px; bottom: 44px; }
+    .prompt { font-size: 76px; margin: 14px 0 16px; }
+    .word { display: inline-block; margin-right: 0.22em; }
+    .cdesc { font: 400 24px 'Inter'; color: var(--muted); }
+    .cmeta { display: flex; justify-content: space-between; align-items: flex-end; margin: 34px 0 30px; }
+    .cd-label { font: 600 18px 'Inter'; letter-spacing: 0.14em; color: var(--subtle); text-transform: uppercase; }
+    .cd { position: relative; height: 54px; width: 300px; font: 700 46px 'Bricolage'; font-variant-numeric: tabular-nums; }
+    .cd span { position: absolute; left: 0; top: 0; white-space: nowrap; }
+    .stack { display: flex; align-items: center; }
+    .stack img { position: relative; width: 46px; height: 46px; border-radius: 23px; border: 3px solid var(--bg); margin-left: -12px; object-fit: cover; }
+    .stack-label { font: 500 20px 'Inter'; color: var(--muted); text-align: right; margin-top: 10px; }
+    .cta { height: 78px; border-radius: 999px; background: var(--pulse); display: grid; place-items: center; font: 600 26px 'Inter'; }
+
+    /* Big side copy */
+    .side { position: absolute; width: 760px; }
+    .side .display { font-size: 136px; }
+    .side .sub { font: 500 30px 'Inter'; color: var(--muted); margin-top: 26px; width: 640px; line-height: 1.4; }
+
+    /* Scene 2: post */
+    .s2-header { position: absolute; top: 60px; left: 0; right: 0; text-align: center; font: 600 17px 'Inter'; }
+    .chip-prompt { position: absolute; top: 108px; left: 20px; right: 20px; padding: 14px 16px; border-radius: 20px; background: var(--surface); display: flex; gap: 12px; align-items: center; }
+    .chip-prompt b { display: block; font: 600 12px 'Inter'; letter-spacing: 0.12em; color: var(--violet); text-transform: uppercase; }
+    .chip-prompt span { font: 600 17px 'Bricolage'; }
+    .preview { position: absolute; top: 196px; left: 20px; right: 20px; height: 440px; border-radius: 28px; overflow: hidden; background: var(--surface); border: 1px solid var(--border); }
+    .preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .caption { position: absolute; top: 652px; left: 20px; right: 20px; height: 52px; border-radius: 14px; background: var(--surface); border: 1.5px solid var(--border); padding: 0 16px; display: flex; align-items: center; font: 400 16px 'Inter'; }
+    .postbtn { position: absolute; left: 20px; right: 20px; bottom: 40px; height: 58px; border-radius: 999px; background: var(--pulse); display: grid; place-items: center; font: 600 18px 'Inter'; }
+    .upload { position: absolute; inset: 54px 0 0; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 0 44px; text-align: center; }
+    .up-icon { width: 76px; height: 76px; border-radius: 38px; background: rgba(124, 92, 255, 0.16); display: grid; place-items: center; font-size: 34px; }
+    .up-title { font: 700 28px 'Bricolage'; }
+    .up-sub { font: 400 17px 'Inter'; color: var(--muted); }
+    .bar { width: 300px; height: 9px; border-radius: 5px; background: var(--raised); overflow: hidden; margin-top: 16px; }
+    .bar i { display: block; height: 100%; width: 100%; border-radius: 5px; background: linear-gradient(90deg, #7c5cff, #ff4f8b); transform-origin: left center; }
+    .pct { position: relative; height: 22px; width: 300px; font: 500 15px 'Inter'; color: var(--subtle); }
+    .pct span { position: absolute; right: 0; top: 0; }
+    .success { position: absolute; inset: 54px 0 0; display: grid; place-content: center; justify-items: center; gap: 16px; }
+    .check { width: 120px; height: 120px; border-radius: 60px; background: var(--lime); display: grid; place-items: center; color: var(--bg); font: 800 64px 'Inter'; }
+    .posted { font-size: 64px; }
+    .burst { position: absolute; width: 0; height: 0; }
+    .burst span { position: absolute; left: -24px; top: -24px; width: 48px; height: 48px; font-size: 40px; line-height: 48px; text-align: center; }
+
+    /* Touch indicator */
+    .touch { position: absolute; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; background: rgba(255, 255, 255, 0.28); border: 2.5px solid rgba(255, 255, 255, 0.8); z-index: 20; }
+
+    /* Scene 3: deck */
+    .deckhead { position: absolute; top: 60px; left: 70px; right: 20px; font: 600 16px 'Inter'; }
+    .deckhead small { display: block; font: 500 13px 'Inter'; color: var(--muted); }
+    .deck { position: absolute; left: 20px; top: 140px; width: 353px; height: 500px; }
+    .dcard { position: absolute; inset: 0; border-radius: 30px; overflow: hidden; background: var(--surface); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8); transform-origin: 50% 100%; }
+    .dcard img.photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .dfade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9, 9, 15, 0.5) 0%, rgba(9, 9, 15, 0) 22%, rgba(9, 9, 15, 0) 45%, rgba(9, 9, 15, 0.95) 100%); }
+    .author { position: absolute; left: 16px; top: 16px; display: flex; gap: 10px; align-items: center; }
+    .author img { width: 38px; height: 38px; border-radius: 19px; object-fit: cover; }
+    .author b { display: block; font: 600 16px 'Inter'; }
+    .author small { font: 500 12px 'Inter'; color: var(--muted); }
+    .dcap { position: absolute; left: 18px; right: 18px; bottom: 64px; font: 600 17px 'Inter'; line-height: 1.35; }
+    .chips { position: absolute; left: 18px; bottom: 20px; display: flex; gap: 8px; }
+    .chips span { display: flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; background: rgba(255, 255, 255, 0.14); font: 600 14px 'Inter'; }
+    .chips span.mine { background: rgba(124, 92, 255, 0.3); box-shadow: 0 0 0 1.5px var(--violet) inset; }
+    .roll { position: relative; display: inline-block; height: 18px; width: 9px; overflow: hidden; vertical-align: -3px; }
+    .roll i { position: absolute; left: 0; top: 0; font-style: normal; line-height: 18px; display: flex; flex-direction: column; }
+    .rbar { position: absolute; left: 16px; right: 16px; top: 676px; display: flex; gap: 8px; }
+    .rbar span { flex: 1; height: 44px; border-radius: 999px; background: var(--surface); border: 1.5px solid var(--border); display: grid; place-items: center; font: 600 14px 'Inter'; }
+    .addbtn { position: absolute; left: 16px; right: 16px; bottom: 34px; height: 54px; border-radius: 999px; background: var(--pulse); display: grid; place-items: center; font: 600 17px 'Inter'; }
+
+    /* Scene 4: chat + leaderboard */
+    .label { position: absolute; display: flex; align-items: center; gap: 14px; font: 700 34px 'Bricolage'; }
+    .label i { width: 14px; height: 14px; border-radius: 50%; }
+    .chathead { position: absolute; top: 54px; left: 0; right: 0; height: 62px; display: flex; align-items: center; gap: 10px; padding: 0 18px; border-bottom: 1px solid var(--border); }
+    .chathead b { font: 600 16px 'Inter'; display: block; }
+    .chathead small { font: 500 12px 'Inter'; color: var(--muted); }
+    .live { margin-left: auto; padding: 5px 12px; border-radius: 999px; background: rgba(46, 229, 157, 0.14); color: #2ee59d; font: 700 12px 'Inter'; letter-spacing: 0.1em; }
+    .msgs { position: absolute; top: 130px; left: 14px; right: 14px; display: flex; flex-direction: column; gap: 12px; }
+    .msg { display: flex; gap: 8px; align-items: flex-end; }
+    .msg img { width: 30px; height: 30px; border-radius: 15px; object-fit: cover; }
+    .msg .who { font: 500 12px 'Inter'; color: var(--muted); margin: 0 0 4px 10px; }
+    .bub { max-width: 250px; padding: 10px 14px; border-radius: 18px 18px 18px 6px; background: var(--raised); font: 400 16px 'Inter'; line-height: 1.4; }
+    .msg.me { justify-content: flex-end; }
+    .msg.me .bub { background: var(--violet); border-radius: 18px 18px 6px 18px; }
+    .quote { border-left: 3px solid var(--violet); padding-left: 8px; margin-bottom: 4px; font: 500 12px 'Inter'; color: var(--muted); }
+    .typing { display: flex; gap: 5px; padding: 13px 16px; border-radius: 18px; background: var(--raised); }
+    .typing i { width: 8px; height: 8px; border-radius: 4px; background: var(--muted); }
+    .composer { position: absolute; left: 14px; right: 14px; bottom: 36px; height: 50px; border-radius: 25px; background: var(--surface); border: 1px solid var(--border); padding: 0 18px; display: flex; align-items: center; font: 400 16px 'Inter'; color: var(--subtle); }
+    .lbhead { position: absolute; top: 60px; left: 0; right: 0; text-align: center; }
+    .lbhead b { font: 600 17px 'Inter'; display: block; }
+    .lbhead small { font: 500 12px 'Inter'; color: var(--muted); }
+    .seg { position: absolute; top: 118px; left: 16px; right: 16px; height: 40px; border-radius: 20px; background: var(--surface); display: flex; align-items: center; font: 600 13px 'Inter'; color: var(--muted); }
+    .seg span { flex: 1; text-align: center; }
+    .seg span.on { margin: 3px; padding: 8px 0; border-radius: 17px; background: var(--raised); color: var(--text); }
+    .board { position: absolute; top: 180px; left: 16px; right: 16px; height: 420px; }
+    .slot { position: absolute; left: 6px; width: 26px; height: 26px; border-radius: 13px; display: grid; place-items: center; font: 700 13px 'Inter'; color: var(--bg); z-index: 2; }
+    .row { position: absolute; left: 0; right: 0; height: 70px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding: 0 16px 0 46px; box-sizing: border-box; }
+    .row img { width: 42px; height: 42px; border-radius: 21px; object-fit: cover; }
+    .row b { display: block; font: 600 16px 'Inter'; }
+    .row small { font: 500 12px 'Inter'; color: var(--muted); }
+    .row .score { margin-left: auto; text-align: right; font: 700 26px 'Bricolage'; font-variant-numeric: tabular-nums; }
+    .row .score small { display: block; font: 500 11px 'Inter'; color: var(--subtle); }
+    .row.me { border: 1.5px solid var(--violet); }
+    .row.lead { border: 1.5px solid rgba(255, 209, 92, 0.6); background: linear-gradient(90deg, rgba(255, 209, 92, 0.14), var(--surface) 70%); }
+    .up { color: #2ee59d; font: 700 14px 'Inter'; margin-left: 6px; }
+    .sroll { position: relative; display: inline-block; height: 30px; width: 16px; overflow: hidden; vertical-align: top; }
+    .sroll i { position: absolute; left: 0; top: 0; font-style: normal; display: flex; flex-direction: column; }
+    .sroll em { display: block; height: 30px; line-height: 30px; font: 700 26px 'Bricolage'; font-style: normal; font-variant-numeric: tabular-nums; }
+
+    /* Scene 5: logo */
+    .shot { position: absolute; width: 300px; border-radius: 34px; border: 1.5px solid var(--border2); opacity: 0.32; }
+    .center { position: absolute; left: 0; right: 0; top: 250px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .biglogo { width: 168px; height: 168px; border-radius: 48px; background: var(--pulse); display: grid; place-items: center; font-size: 92px; box-shadow: 0 30px 120px -10px rgba(124, 92, 255, 0.9); }
+    .ring { position: absolute; left: 50%; top: 84px; width: 168px; height: 168px; margin: -84px 0 0 -84px; border-radius: 48px; border: 3px solid rgba(200, 255, 77, 0.8); }
+    .wordmark { font-size: 150px; margin-top: 40px; }
+    .tagline { font: 500 40px 'Inter'; color: var(--muted); margin-top: 18px; }
+    .url { margin-top: 46px; padding: 18px 34px; border-radius: 999px; background: var(--raised); border: 1.5px solid var(--border2); font: 600 30px 'Inter'; }
+    .url b { color: var(--lime); font-weight: 600; }
+    .stackline { margin-top: 26px; font: 500 22px 'Inter'; color: var(--subtle); letter-spacing: 0.04em; }
+    #fadeout { position: absolute; inset: 0; background: #000; }
+  </style>
+</head>
+<body>
+  <div id="root" data-composition-id="pulsedeck-launch" data-start="0" data-width="1920" data-height="1080" data-duration="24" data-fps="60">
+
+    <!-- Background glow, reacts subtly to the music -->
+    <section id="bg" class="clip" data-start="0" data-duration="24" data-track-index="0">
+      <div id="glow-a" class="glow"></div>
+      <div id="glow-b" class="glow"></div>
+    </section>
+
+    <section id="brandmark" class="clip" data-start="0" data-duration="18" data-track-index="1">
+      <div class="brand" id="brand"><span class="logo">⚡</span>PulseDeck</div>
+    </section>
+
+    <!-- Scene 1: the drop -->
+    <section id="s1" class="clip" data-start="0" data-duration="4" data-track-index="2">
+      <div class="s1-copy">
+        <div class="overline" id="s1-over">Today’s challenge</div>
+        <div class="display" style="margin-top: 24px">
+          <span class="s1-line" id="s1-l1">One prompt.</span>
+          <span class="s1-line grad" id="s1-l2">Every day.</span>
+        </div>
+      </div>
+      <div class="ccard" id="ccard">
+        <img src="assets/img/deskhero.jpg" alt="" />
+        <div class="scrim"></div>
+        <div class="badge" data-layout-ignore><span class="dot" id="livedot"></span>LIVE NOW</div>
+        <div class="emojichip">🖥️</div>
+        <div class="cbody">
+          <div class="overline" style="font-size: 18px" data-layout-ignore>Today’s challenge</div>
+          <div class="display prompt"><span class="word">Show</span><span class="word">us</span><span class="word">your</span><span class="word">worst</span><span class="word">desk</span><span class="word">setup</span></div>
+          <div class="cdesc" data-layout-ignore>No cleaning allowed. We want the raw, unfiltered chaos.</div>
+          <div class="cmeta" data-layout-ignore>
+            <div>
+              <div class="cd-label">Closes in</div>
+              <div class="cd" data-layout-ignore><span id="cd0">6h 29m 59s</span><span id="cd1">6h 29m 58s</span><span id="cd2">6h 29m 57s</span><span id="cd3">6h 29m 56s</span></div>
+            </div>
+            <div>
+              <div class="stack" id="stack"><img src="assets/img/av-maya.jpg" alt="" /><img src="assets/img/av-tyler.jpg" alt="" /><img src="assets/img/av-ava.jpg" alt="" /><img src="assets/img/av-marcus.jpg" alt="" /><img src="assets/img/av-chloe.jpg" alt="" /></div>
+              <div class="stack-label">6 of 8 in</div>
+            </div>
+          </div>
+          <div class="cta" data-layout-ignore>📷&nbsp; Answer the challenge</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 2: post in 30 seconds -->
+    <section id="s2" class="clip" data-start="4" data-duration="4" data-track-index="2">
+      <div class="side" style="left: 170px; top: 360px">
+        <div class="display"><span class="s1-line" id="s2-l1">Post in</span><span class="s1-line grad" id="s2-l2">30 seconds.</span></div>
+        <div class="sub" id="s2-sub">Photo, video or a hot take.</div>
+      </div>
+      <div class="phone" id="s2-phone" style="left: 1200px; top: 94px">
+        <div class="screen" data-layout-ignore>
+          <div class="sb"><span>9:41</span><i class="island"></i><span class="sbi">•••• <span class="bat"><i></i></span></span></div>
+          <div id="s2-compose">
+            <div class="s2-header">New response</div>
+            <div class="chip-prompt"><span style="font-size: 26px">🖥️</span><div><b>Today’s challenge</b><span>Show us your worst desk setup</span></div></div>
+            <div class="preview"><img id="s2-photo" src="assets/img/desk4.jpg" alt="" /></div>
+            <div class="caption"><span id="s2-cap">my “minimalist era” (everything else is on the floor)</span></div>
+            <div class="postbtn" id="s2-post">➤&nbsp; Post response</div>
+          </div>
+          <div class="upload" id="s2-upload">
+            <div class="up-icon">☁️</div>
+            <div class="up-title">Uploading</div>
+            <div class="up-sub">Keep the app open for a sec.</div>
+            <div class="bar"><i id="s2-bar"></i></div>
+            <div class="pct"><span id="p0">0%</span><span id="p1">38%</span><span id="p2">74%</span><span id="p3">100%</span></div>
+          </div>
+          <div class="success" id="s2-success">
+            <div class="burst" id="s2-burst" style="left: 196px; top: 300px"><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span></div>
+            <div class="check" id="s2-check">✓</div>
+            <div class="display posted" id="s2-posted">Posted!</div>
+            <div class="up-sub" id="s2-streak">Streak extended to 13 days 🔥</div>
+          </div>
+          <div class="touch" id="s2-touch" style="left: 196px; top: 783px"></div>
+          <i class="hi"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 3: the deck -->
+    <section id="s3" class="clip" data-start="8" data-duration="4" data-track-index="2">
+      <div class="phone" id="s3-phone" style="left: 300px; top: 94px">
+        <div class="screen" data-layout-ignore>
+          <div class="sb"><span>9:41</span><i class="island"></i><span class="sbi">•••• <span class="bat"><i></i></span></span></div>
+          <div class="appbar" style="padding-left: 16px"><span class="iconbtn">‹</span></div>
+          <div class="deckhead">🖥️ Show us your worst desk se…<small>Live now · closes in 6h 29m</small></div>
+          <div class="deck">
+            <div class="dcard" id="card3">
+              <img class="photo" src="assets/img/desk2.jpg" alt="" /><div class="dfade"></div>
+              <div class="author"><img src="assets/img/av-marcus.jpg" alt="" /><div><b>Marcus Johnson</b><small>@marcusj · 1h</small></div></div>
+              <div class="dcap">the plant is fake. so is my productivity</div>
+              <div class="chips"><span>😂 5</span><span>🔥 2</span></div>
+            </div>
+            <div class="dcard" id="card2">
+              <img class="photo" src="assets/img/desk3.jpg" alt="" /><div class="dfade"></div>
+              <div class="author"><img src="assets/img/av-tyler.jpg" alt="" /><div><b>Tyler Brooks</b><small>@tylerb · 3h</small></div></div>
+              <div class="dcap">monitor arm is held up by my old calc textbook. it is load bearing.</div>
+              <div class="chips"><span id="fire-chip">🔥 <span class="roll"><i id="fire-roll"><b>4</b><b>5</b></i></span></span><span>😂 6</span><span>💀 4</span></div>
+            </div>
+            <div class="dcard" id="card1">
+              <img class="photo" src="assets/img/desk1.jpg" alt="" /><div class="dfade"></div>
+              <div class="author"><img src="assets/img/av-maya.jpg" alt="" /><div><b>Maya Thompson</b><small>@mayat · 4h</small></div></div>
+              <div class="dcap">cable management is a state of mind</div>
+              <div class="chips"><span>🔥 4</span><span>😂 3</span><span>💀 2</span></div>
+            </div>
+            <div class="burst" id="s3-burst" style="left: 176px; top: 230px"><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span></div>
+            <div class="burst" style="left: 176px; top: 230px"><span id="s3-big" style="font-size: 120px; width: 140px; height: 140px; left: -70px; top: -70px; line-height: 140px">🔥</span></div>
+          </div>
+          <div class="rbar"><span>🔥 4</span><span>😂 6</span><span>💀 4</span><span>❤️ 0</span></div>
+          <div class="addbtn">＋&nbsp; Add yours</div>
+          <div class="touch" id="s3-touch" style="left: 196px; top: 390px"></div>
+          <i class="hi"></i>
+        </div>
+      </div>
+      <div class="side" style="left: 980px; top: 330px">
+        <div class="display"><span class="s1-line" id="s3-l1">Swipe.</span><span class="s1-line" id="s3-l2">React.</span><span class="s1-line grad" id="s3-l3">Crown a winner.</span></div>
+      </div>
+    </section>
+
+    <!-- Scene 4: live -->
+    <section id="s4" class="clip" data-start="12" data-duration="6" data-track-index="2">
+      <div class="label" id="lab-chat" style="left: 380px; top: 96px"><i style="background: var(--blue)"></i>Realtime chat</div>
+      <div class="label" id="lab-board" style="left: 1110px; top: 96px"><i style="background: var(--lime)"></i>Live leaderboard</div>
+      <div class="phone" id="s4-chat" style="left: 380px; top: 170px">
+        <div class="screen" data-layout-ignore>
+          <div class="sb"><span>9:41</span><i class="island"></i><span class="sbi">•••• <span class="bat"><i></i></span></span></div>
+          <div class="chathead"><span style="font-size: 26px">🏠</span><div><b>Apartment 4B</b><small>8 members</small></div><span class="live">● LIVE</span></div>
+          <div class="msgs">
+            <div><div class="who">Maya</div><div class="msg"><img src="assets/img/av-maya.jpg" alt="" /><div class="bub">Jordan you’re the only one who hasn’t posted 👀</div></div></div>
+            <div id="m1"><div class="who">Marcus</div><div class="msg"><img src="assets/img/av-marcus.jpg" alt="" /><div class="bub">taco tuesday at Veracruz after this? 🌮</div></div></div>
+            <div id="m2"><div class="who">Chloe</div><div class="msg"><img src="assets/img/av-chloe.jpg" alt="" /><div class="bub"><div class="quote">Marcus: taco tuesday…</div>I’m in</div></div></div>
+            <div id="m3" class="msg me"><div class="bub">say less 🔥 posting my desk now</div></div>
+            <div id="typing" class="msg"><img src="assets/img/av-ava.jpg" alt="" /><div class="typing"><i id="t1"></i><i id="t2"></i><i id="t3"></i></div></div>
+          </div>
+          <div class="composer">Message the crew</div>
+          <i class="hi"></i>
+        </div>
+      </div>
+      <div class="phone" id="s4-board" style="left: 1110px; top: 170px">
+        <div class="screen" data-layout-ignore>
+          <div class="sb"><span>9:41</span><i class="island"></i><span class="sbi">•••• <span class="bat"><i></i></span></span></div>
+          <div class="lbhead"><b>Leaderboard</b><small>🏠 Apartment 4B · this week</small></div>
+          <div class="seg"><span>Wins</span><span>Posts</span><span class="on">Reactions</span><span>Streak</span></div>
+          <div class="board">
+            <span class="slot" style="top: 22px; background: var(--gold)">1</span>
+            <span class="slot" style="top: 104px; background: #cbd2e1">2</span>
+            <span class="slot" style="top: 186px; background: #e3a06b">3</span>
+            <span class="slot" style="top: 268px; background: var(--raised); color: var(--muted)">4</span>
+            <span class="slot" style="top: 350px; background: var(--raised); color: var(--muted)">5</span>
+            <div class="row lead" id="r-maya" style="top: 0"><img src="assets/img/av-maya.jpg" alt="" /><div><b>Maya Thompson</b><small>🔥 15-day streak</small></div><div class="score">52<small>reacts</small></div></div>
+            <div class="row" id="r-ava" style="top: 82px"><img src="assets/img/av-ava.jpg" alt="" /><div><b>Ava Martinez</b><small>🔥 9-day streak</small></div><div class="score">47<small>reacts</small></div></div>
+            <div class="row me" id="r-me" style="top: 164px"><img src="assets/img/av-jordan.jpg" alt="" /><div><b>You <span class="up" id="r-up">▲ 2</span></b><small>🔥 13-day streak</small></div><div class="score"><span class="sroll"><i id="me-tens"><em>4</em><em>5</em></i></span><span class="sroll"><i id="me-ones"><em>1</em><em>2</em><em>3</em><em>4</em><em>5</em><em>6</em><em>7</em><em>8</em></i></span><small>reacts</small></div></div>
+            <div class="row" id="r-tyler" style="top: 246px"><img src="assets/img/av-tyler.jpg" alt="" /><div><b>Tyler Brooks</b><small>🔥 4-day streak</small></div><div class="score">38<small>reacts</small></div></div>
+            <div class="row" id="r-chloe" style="top: 328px"><img src="assets/img/av-chloe.jpg" alt="" /><div><b>Chloe Nguyen</b><small>🔥 7-day streak</small></div><div class="score">33<small>reacts</small></div></div>
+          </div>
+          <i class="hi"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 5: logo -->
+    <section id="s5" class="clip" data-start="18" data-duration="6" data-track-index="2">
+      <img class="shot" id="sh1" src="assets/img/home.png" alt="" style="left: 40px; top: 120px" />
+      <img class="shot" id="sh2" src="assets/img/feed.png" alt="" style="left: 1580px; top: 90px" />
+      <img class="shot" id="sh3" src="assets/img/chat.png" alt="" style="left: 300px; top: 560px" />
+      <img class="shot" id="sh4" src="assets/img/leaderboard.png" alt="" style="left: 1320px; top: 600px" />
+      <div class="center">
+        <div style="position: relative">
+          <div class="ring" id="ring"></div>
+          <div class="biglogo" id="biglogo">⚡</div>
+        </div>
+        <div class="display wordmark" id="wordmark">PulseDeck</div>
+        <div class="tagline" id="tagline">Tiny daily challenges for your favorite people.</div>
+        <div class="url" id="url">Try the live demo → <b>pulsedeck-ten.vercel.app</b></div>
+        <div class="stackline" id="stackline">React Native · Expo · Reanimated · Supabase</div>
+      </div>
+    </section>
+
+    <section id="fade" class="clip" data-start="22.6" data-duration="1.4" data-track-index="3">
+      <div id="fadeout"></div>
+    </section>
+
+    <!-- Audio: original score (low bed, ducked under VO in the master), Kokoro narration, motion-matched SFX -->
+    <audio id="music" src="assets/music/pulse-check.wav" data-start="0" data-duration="24" data-track-index="10" data-volume="0.26"></audio>
+    <audio id="vo1" src="assets/vo/vo1.wav" data-start="0.4" data-track-index="4" data-volume="1"></audio>
+    <audio id="vo2" src="assets/vo/vo2.wav" data-start="4.3" data-track-index="5" data-volume="1"></audio>
+    <audio id="vo3" src="assets/vo/vo3.wav" data-start="8.2" data-track-index="6" data-volume="1"></audio>
+    <audio id="vo4" src="assets/vo/vo4.wav" data-start="12.3" data-track-index="7" data-volume="1"></audio>
+    <audio id="vo5" src="assets/vo/vo5.wav" data-start="18.4" data-track-index="8" data-volume="1"></audio>
+    <audio id="sfx-photo" src="assets/sfx/drop_001.ogg" data-start="4.52" data-track-index="11" data-volume="0.5"></audio>
+    <audio id="sfx-tap" src="assets/sfx/click1.ogg" data-start="5.44" data-track-index="12" data-volume="0.55"></audio>
+    <audio id="sfx-posted" src="assets/sfx/impactGlass_light_001.ogg" data-start="6.9" data-track-index="13" data-volume="0.55"></audio>
+    <audio id="sfx-swipe" src="assets/sfx/card-slide-1.ogg" data-start="9.0" data-track-index="14" data-volume="0.6"></audio>
+    <audio id="sfx-tap1" src="assets/sfx/click3.ogg" data-start="10.15" data-track-index="15" data-volume="0.45"></audio>
+    <audio id="sfx-tap2" src="assets/sfx/click3.ogg" data-start="10.38" data-track-index="16" data-volume="0.45"></audio>
+    <audio id="sfx-burst" src="assets/sfx/impactSoft_medium_001.ogg" data-start="10.45" data-track-index="17" data-volume="0.45"></audio>
+    <audio id="sfx-m1" src="assets/sfx/drop_002.ogg" data-start="12.7" data-track-index="18" data-volume="0.45"></audio>
+    <audio id="sfx-m2" src="assets/sfx/drop_002.ogg" data-start="13.7" data-track-index="19" data-volume="0.45"></audio>
+    <audio id="sfx-m3" src="assets/sfx/drop_001.ogg" data-start="15.0" data-track-index="20" data-volume="0.45"></audio>
+    <audio id="sfx-reorder" src="assets/sfx/card-fan-1.ogg" data-start="15.5" data-track-index="21" data-volume="0.5"></audio>
+  </div>
+
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const $ = (s) => document.querySelector(s);
+    const all = (s) => gsap.utils.toArray(s);
+
+    // ---- background: audio-reactive glow (per-frame RMS of the score, deterministic) ----
+    const glowProxy = { t: 0 };
+    tl.to(glowProxy, {
+      t: 24, duration: 24, ease: 'none',
+      onUpdate() {
+        const rms = window.PD_RMS[Math.min(window.PD_RMS.length - 1, Math.round(glowProxy.t * 60))] || 0;
+        gsap.set('#glow-a', { opacity: 0.55 + rms * 0.45, scale: 1 + rms * 0.08 });
+        gsap.set('#glow-b', { opacity: 0.45 + rms * 0.4, scale: 1 + rms * 0.06 });
+      },
+    }, 0);
+    tl.fromTo('#brand', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.2);
+    tl.to('#brand', { opacity: 0, duration: 0.3 }, 17.6);
+
+    // ---- Scene 1 (0–4): the drop. beat-locked: card lands on the 0.0 soft hit ----
+    tl.fromTo('#ccard', { y: 160, scale: 0.86, rotation: -7, opacity: 0 }, { y: 0, scale: 1, rotation: -2, opacity: 1, duration: 0.75, ease: 'back.out(1.5)' }, 0.0);
+    tl.fromTo('#ccard .word', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.1, ease: 'power3.out' }, 0.35);
+    tl.fromTo('#s1-over', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.45, ease: 'power2.out' }, 0.5);
+    tl.fromTo('#s1-l1', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, 0.65);
+    tl.fromTo('#s1-l2', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, 1.0); // beat-grid: 1.0
+    tl.fromTo('#stack img', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, stagger: 0.07, ease: 'back.out(2)' }, 1.2);
+    tl.fromTo('#livedot', { scale: 1, opacity: 1 }, { scale: 1.6, opacity: 0.4, duration: 0.5, repeat: 7, yoyo: true, ease: 'sine.inOut' }, 0);
+    ['#cd1', '#cd2', '#cd3'].forEach((id) => tl.set(id, { opacity: 0 }, 0));
+    [1, 2, 3].forEach((s) => { tl.set(`#cd${s - 1}`, { opacity: 0 }, s); tl.set(`#cd${s}`, { opacity: 1 }, s); });
+    tl.to('#ccard', { x: -260, rotation: -9, opacity: 0, duration: 0.45, ease: 'power2.in' }, 3.55);
+    tl.to(['#s1-over', '#s1-l1', '#s1-l2'], { x: -80, opacity: 0, duration: 0.4, stagger: 0.04, ease: 'power2.in' }, 3.55);
+
+    // ---- Scene 2 (4–8): post. beat-locked: phone + headline land on the 4.0 drop ----
+    tl.fromTo('#s2-phone', { x: 180, opacity: 0, rotation: 3 }, { x: 0, opacity: 1, rotation: 0, duration: 0.6, ease: 'power3.out' }, 4.0);
+    tl.fromTo('#s2-l1', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 4.1);
+    tl.fromTo('#s2-l2', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 4.5); // beat-grid: 4.5
+    tl.fromTo('#s2-sub', { opacity: 0 }, { opacity: 1, duration: 0.5 }, 4.9);
+    tl.fromTo('#s2-photo', { y: -80, scale: 1.12, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.55, ease: 'back.out(1.4)' }, 4.5);
+    tl.fromTo('#s2-cap', { opacity: 0 }, { opacity: 1, duration: 0.3 }, 4.9);
+    tl.fromTo('#s2-touch', { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25 }, 5.2);
+    tl.to('#s2-touch', { scale: 0.75, duration: 0.12, yoyo: true, repeat: 1 }, 5.46);
+    tl.to('#s2-post', { scale: 0.95, duration: 0.12, yoyo: true, repeat: 1 }, 5.46);
+    tl.to('#s2-touch', { opacity: 0, duration: 0.2 }, 5.7);
+    tl.set(['#s2-upload', '#s2-success'], { opacity: 0 }, 0);
+    tl.to('#s2-compose', { opacity: 0, duration: 0.2 }, 5.65);
+    tl.to('#s2-upload', { opacity: 1, duration: 0.2 }, 5.7);
+    tl.fromTo('#s2-bar', { scaleX: 0 }, { scaleX: 1, duration: 1.0, ease: 'power1.inOut' }, 5.75);
+    ['#p1', '#p2', '#p3'].forEach((id) => tl.set(id, { opacity: 0 }, 0));
+    tl.set('#p0', { opacity: 0 }, 6.05); tl.set('#p1', { opacity: 1 }, 6.05);
+    tl.set('#p1', { opacity: 0 }, 6.4); tl.set('#p2', { opacity: 1 }, 6.4);
+    tl.set('#p2', { opacity: 0 }, 6.72); tl.set('#p3', { opacity: 1 }, 6.72);
+    tl.to('#s2-upload', { opacity: 0, duration: 0.15 }, 6.82);
+    tl.to('#s2-success', { opacity: 1, duration: 0.1 }, 6.85);
+    tl.fromTo('#s2-check', { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: 'back.out(2.2)' }, 6.88);
+    tl.fromTo('#s2-posted', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }, 7.05);
+    tl.fromTo('#s2-streak', { opacity: 0 }, { opacity: 1, duration: 0.3 }, 7.2);
+    all('#s2-burst span').forEach((el, i) => {
+      const a = (i / 8) * Math.PI * 2 + 0.2;
+      tl.fromTo(el, { x: 0, y: 0, opacity: 0, scale: 0.4 }, { x: Math.cos(a) * 170, y: Math.sin(a) * 170 + 30, opacity: 1, scale: 0.9, duration: 0.55, ease: 'power2.out' }, 6.9);
+      tl.to(el, { opacity: 0, duration: 0.35 }, 7.4);
+    });
+    tl.to('#s2-phone', { x: 160, opacity: 0, duration: 0.4, ease: 'power2.in' }, 7.6);
+    tl.to(['#s2-l1', '#s2-l2', '#s2-sub'], { x: -80, opacity: 0, duration: 0.35, stagger: 0.04, ease: 'power2.in' }, 7.6);
+
+    // ---- Scene 3 (8–12): swipe deck + double-tap react ----
+    tl.fromTo('#s3-phone', { x: -180, opacity: 0, rotation: -3 }, { x: 0, opacity: 1, rotation: 0, duration: 0.6, ease: 'power3.out' }, 8.0);
+    tl.set('#card2', { scale: 0.92, y: 18 }, 0);
+    tl.set('#card3', { scale: 0.86, y: 34 }, 0);
+    tl.fromTo('#s3-l1', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 8.15);
+    tl.fromTo('#s3-l2', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 9.0); // beat-grid: 9.0 with the swipe
+    tl.fromTo('#s3-l3', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 10.0);
+    tl.fromTo('#s3-touch', { scale: 0.4, opacity: 0, x: 0 }, { scale: 1, opacity: 1, duration: 0.2 }, 8.6);
+    tl.to('#s3-touch', { scale: 0.8, duration: 0.15 }, 8.8);
+    tl.to('#s3-touch', { x: -300, y: 30, duration: 0.6, ease: 'power2.in' }, 8.85);
+    tl.to('#card1', { x: -560, y: 40, rotation: -18, duration: 0.65, ease: 'power2.in' }, 8.85);
+    tl.to('#card1', { opacity: 0, duration: 0.15 }, 9.4);
+    tl.to('#s3-touch', { opacity: 0, duration: 0.15 }, 9.4);
+    tl.to('#card2', { scale: 1, y: 0, duration: 0.5, ease: 'back.out(1.6)' }, 9.15);
+    tl.to('#card3', { scale: 0.92, y: 18, duration: 0.5, ease: 'back.out(1.6)' }, 9.2);
+    tl.set('#s3-touch', { x: 0, y: -40, scale: 1 }, 9.9);
+    tl.to('#s3-touch', { opacity: 1, duration: 0.12 }, 9.95);
+    tl.to('#s3-touch', { scale: 0.7, duration: 0.08, yoyo: true, repeat: 1 }, 10.15);
+    tl.to('#s3-touch', { scale: 0.7, duration: 0.08, yoyo: true, repeat: 1 }, 10.38);
+    tl.to('#s3-touch', { opacity: 0, duration: 0.2 }, 10.6);
+    tl.fromTo('#s3-big', { scale: 0.2, opacity: 0, y: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(3)' }, 10.45);
+    tl.to('#s3-big', { y: -60, opacity: 0, duration: 0.45, ease: 'power2.in' }, 11.0);
+    all('#s3-burst span').forEach((el, i) => {
+      const a = (i / 8) * Math.PI * 2 - 0.3;
+      tl.fromTo(el, { x: 0, y: 0, opacity: 0, scale: 0.4 }, { x: Math.cos(a) * 150, y: Math.sin(a) * 150 + 40, opacity: 1, scale: 0.8, rotation: i % 2 ? 30 : -30, duration: 0.6, ease: 'power2.out' }, 10.45);
+      tl.to(el, { opacity: 0, duration: 0.3 }, 10.95);
+    });
+    tl.to('#fire-roll', { y: -18, duration: 0.4, ease: 'back.out(2)' }, 10.55);
+    tl.set('#fire-chip', { className: 'mine' }, 10.55);
+    tl.to('#s3-phone', { x: -160, opacity: 0, duration: 0.4, ease: 'power2.in' }, 11.6);
+    tl.to(['#s3-l1', '#s3-l2', '#s3-l3'], { x: 80, opacity: 0, duration: 0.35, stagger: 0.04, ease: 'power2.in' }, 11.6);
+
+    // ---- Scene 4 (12–18): live chat + leaderboard reshuffle ----
+    tl.fromTo(['#s4-chat', '#s4-board'], { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.15, ease: 'power3.out' }, 12.0);
+    tl.fromTo(['#lab-chat', '#lab-board'], { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, stagger: 0.15, ease: 'power2.out' }, 12.25);
+    tl.set(['#m1', '#m2', '#m3', '#typing'], { opacity: 0 }, 0);
+    tl.fromTo('#m1', { opacity: 0, y: 20, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.8)' }, 12.7); // beat-grid
+    tl.fromTo('#m2', { opacity: 0, y: 20, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.8)' }, 13.7); // beat-grid (every other beat)
+    tl.to('#typing', { opacity: 1, duration: 0.2 }, 14.2);
+    ['#t1', '#t2', '#t3'].forEach((d, i) => tl.fromTo(d, { y: 0 }, { y: -5, duration: 0.18, yoyo: true, repeat: 3, ease: 'sine.inOut' }, 14.2 + i * 0.09));
+    tl.to('#typing', { opacity: 0, duration: 0.15 }, 14.9);
+    tl.fromTo('#m3', { opacity: 0, y: 20, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.8)' }, 15.0);
+    // Leaderboard: "You" climbs from #3 to #1 while the score rolls 41 → 58.
+    tl.set('#r-up', { opacity: 0 }, 0);
+    tl.to('#me-tens', { y: -30, duration: 0.5, ease: 'power3.out' }, 15.3);
+    tl.to('#me-ones', { y: -210, duration: 0.7, ease: 'power3.out' }, 15.3);
+    tl.to('#r-me', { y: -164, duration: 0.65, ease: 'power3.inOut' }, 15.5); // beat-grid: 15.5
+    tl.to(['#r-maya', '#r-ava'], { y: 82, duration: 0.65, ease: 'power3.inOut' }, 15.5);
+    tl.set('#r-maya', { className: 'row' }, 15.85);
+    tl.set('#r-me', { className: 'row me lead' }, 15.85);
+    tl.to('#r-up', { opacity: 1, duration: 0.3 }, 16.1);
+    tl.to(['#s4-chat', '#s4-board', '#lab-chat', '#lab-board'], { opacity: 0, scale: 0.96, duration: 0.35, ease: 'power2.in' }, 17.6);
+
+    // ---- Scene 5 (18–24): logo. beat-locked: 18.0 impact ----
+    all('#s5 .shot').forEach((el, i) => {
+      const r = [-10, 8, 6, -7][i];
+      tl.fromTo(el, { opacity: 0, y: 60, rotation: r }, { opacity: 0.3, y: 0, rotation: r, duration: 1.0, ease: 'power2.out' }, 18.1 + i * 0.1);
+      tl.to(el, { y: -40, rotation: r * 1.2, duration: 4.8, ease: 'none' }, 19.1);
+    });
+    tl.fromTo('#biglogo', { scale: 0.3, rotation: -18, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.7, ease: 'back.out(2)' }, 18.0);
+    tl.fromTo('#ring', { scale: 1, opacity: 0.9 }, { scale: 2.4, opacity: 0, duration: 1.0, ease: 'power2.out' }, 18.05);
+    tl.fromTo('#wordmark', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 18.35);
+    tl.fromTo('#tagline', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 19.0);
+    tl.fromTo('#url', { opacity: 0, y: 30, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'back.out(1.6)' }, 20.0);
+    tl.fromTo('#stackline', { opacity: 0 }, { opacity: 1, duration: 0.5 }, 20.5);
+    tl.fromTo('#fadeout', { opacity: 0 }, { opacity: 1, duration: 1.4, ease: 'power1.in' }, 22.6);
+
+    window.__timelines['pulsedeck-launch'] = tl;
+  </script>
+</body>
+</html>

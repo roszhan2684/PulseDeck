@@ -1,0 +1,25 @@
+# Minimal local config for `supabase start` (Supabase CLI, free). See https://supabase.com/docs/guides/local-development
+project_id = "pulsedeck"
+
+[api]
+port = 54321
+schemas = ["public", "storage"]
+
+[db]
+port = 54322
+major_version = 15
+
+[realtime]
+enabled = true
+
+[storage]
+enabled = true
+
+[auth]
+site_url = "pulsedeck://"
+additional_redirect_urls = ["pulsedeck://", "exp://127.0.0.1:8081"]
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false

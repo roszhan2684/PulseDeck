@@ -41,3 +41,13 @@ example
 # generated native folders
 /ios
 /android
+
+# env
+.env
+.env.local
+coverage/
+
+# local tool state / large intermediates
+brag-output/composition/.hyperframes/
+website/.vercel
+website/.env*
