@@ -35,7 +35,7 @@
 
     /* Brand mark */
     .brand { position: absolute; left: 72px; top: 56px; display: flex; align-items: center; gap: 14px; font: 700 30px 'Bricolage'; }
-    .logo { width: 46px; height: 46px; border-radius: 14px; background: var(--pulse); display: grid; place-items: center; font-size: 24px; }
+    .logo { width: 50px; height: 50px; display: block; filter: drop-shadow(0 6px 14px rgba(124, 92, 255, 0.5)); }
 
     /* Phone */
     .phone { position: absolute; width: 433px; height: 892px; padding: 20px; box-sizing: border-box; border-radius: 74px;
@@ -169,8 +169,8 @@
     /* Scene 5: logo */
     .shot { position: absolute; width: 300px; border-radius: 34px; border: 1.5px solid var(--border2); opacity: 0.32; }
     .center { position: absolute; left: 0; right: 0; top: 250px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .biglogo { width: 168px; height: 168px; border-radius: 48px; background: var(--pulse); display: grid; place-items: center; font-size: 92px; box-shadow: 0 30px 120px -10px rgba(124, 92, 255, 0.9); }
-    .ring { position: absolute; left: 50%; top: 84px; width: 168px; height: 168px; margin: -84px 0 0 -84px; border-radius: 48px; border: 3px solid rgba(200, 255, 77, 0.8); }
+    .biglogo { display: block; width: 184px; height: 184px; filter: drop-shadow(0 30px 60px rgba(124, 92, 255, 0.75)); }
+    .ring { position: absolute; left: 50%; top: 92px; width: 184px; height: 184px; margin: -92px 0 0 -92px; border-radius: 42px; border: 3px solid rgba(200, 255, 77, 0.8); }
     .wordmark { font-size: 150px; margin-top: 40px; }
     .tagline { font: 500 40px 'Inter'; color: var(--muted); margin-top: 18px; }
     .url { margin-top: 46px; padding: 18px 34px; border-radius: 999px; background: var(--raised); border: 1.5px solid var(--border2); font: 600 30px 'Inter'; }
@@ -189,7 +189,7 @@
     </section>
 
     <section id="brandmark" class="clip" data-start="0" data-duration="18" data-track-index="1">
-      <div class="brand" id="brand"><span class="logo">⚡</span>PulseDeck</div>
+      <div class="brand" id="brand"><img class="logo" src="assets/brand/logo.svg" alt="" />PulseDeck</div>
     </section>
 
     <!-- Scene 1: the drop -->
@@ -350,7 +350,7 @@
       <div class="center">
         <div style="position: relative">
           <div class="ring" id="ring"></div>
-          <div class="biglogo" id="biglogo">⚡</div>
+          <img class="biglogo" id="biglogo" src="assets/brand/logo.svg" alt="" />
         </div>
         <div class="display wordmark" id="wordmark">PulseDeck</div>
         <div class="tagline" id="tagline">Tiny daily challenges for your favorite people.</div>

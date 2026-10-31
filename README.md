@@ -1,3 +1,5 @@
+<img src="brand/icon-rounded.svg" width="96" alt="PulseDeck app icon" />
+
 # PulseDeck
 
 **PulseDeck is a motion-first social challenge app for close friend groups, built with React Native, Expo, TypeScript, React Reanimated, and Supabase. It explores how motion, gestures, realtime interaction, and UI systems can make lightweight social interactions feel playful and immediate.**

@@ -37,5 +37,16 @@ Spacing 4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48. Radii 6 · 10 · 14 ·
 ## Components (variants)
 Button (primary · lime · secondary · ghost · danger × sm/md/lg × default/pressed/disabled/loading) · IconButton (solid/ghost/glass, badge) · TextField (default/focus/error/hint, secure) · Avatar / AnimatedAvatar (selected, pulse) · AvatarStack · Card · Badge (7 tones, live dot) · Chip (selected, count) · SegmentedControl · Sheet · AnimatedModal · Toast (info/success/error, action) · Skeleton (+ ChallengeCard/Row skeletons) · EmptyState · ErrorState (per error kind) · SectionHeader · TabBar · ChallengeCard (5 phases) · SubmissionCard (photo/video/text, winner, voted) · ReactionPicker · ReactionBar · MessageBubble (sending/sent/failed, reply, reactions, challenge ref, media) · TypingIndicator · LeaderboardRow (podium, leader, me, movement) · StatTile · BadgeCarousel · SubmissionGrid.
 
+## App icon
+A deck of cards (ghosted back card, solid front card) with a pulse line, on the violet → magenta → pink gradient. Source of truth: `scripts/build-icons.py` → `brand/*.svg`.
+| Asset | File |
+|---|---|
+| iOS / Expo icon (full bleed, OS masks corners) | `assets/images/icon.png` (1024) |
+| Android adaptive | `assets/images/android-icon-{foreground,background,monochrome}.png` (mark in the 74% safe zone) |
+| Splash | `assets/images/splash-icon.png` on #09090F |
+| Web favicon (simplified for 16–48 px) | `website/assets/favicon.{svg,ico}`, `favicon-32.png`, Expo web `assets/images/favicon.png` |
+| Apple touch / PWA | `website/assets/apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png`, `site.webmanifest` |
+| In-app & on-page logo | `<BrandMark />` (react-native-svg), `website/assets/logo.svg`, launch film |
+
 ## Inspiration
 Mobbin (BeReal, Locket, Snapchat flows), Game UI Database + HUDS+GUIS (leaderboard, pulse rings), Design Spells (micro-interactions), 60fps (swipe and sheet physics).

@@ -10,7 +10,10 @@
   <meta property="og:description" content="A motion-first iOS app built with React Native, Expo, Reanimated and Supabase. Try the live demo in your browser." />
   <meta property="og:image" content="/assets/og.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/assets/favicon.ico" sizes="48x48" />
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -19,7 +22,7 @@
 </head>
 <body>
   <header class="nav">
-    <a class="brand" href="#top" aria-label="PulseDeck home"><span class="logo">⚡</span>PulseDeck</a>
+    <a class="brand" href="#top" aria-label="PulseDeck home"><img class="logo" src="/assets/logo.svg" alt="" />PulseDeck</a>
     <nav aria-label="Primary">
       <a href="#walkthrough">Walkthrough</a>
       <a href="#film">Film</a>
@@ -69,7 +72,7 @@
               </div>
               <iframe id="app" src="/demo/" title="PulseDeck live demo" loading="eager" allow="clipboard-write"></iframe>
               <div class="home-ind" aria-hidden="true"></div>
-              <div class="loading" id="loading"><span class="logo big">⚡</span><span>Loading the live app…</span></div>
+              <div class="loading" id="loading"><img class="logo big" src="/assets/logo.svg" alt="" /><span>Loading the live app…</span></div>
             </div>
           </div>
         </div>
@@ -177,7 +180,7 @@
 
   <footer class="footer">
     <div>
-      <a class="brand" href="#top"><span class="logo">⚡</span>PulseDeck</a>
+      <a class="brand" href="#top"><img class="logo" src="/assets/logo.svg" alt="" />PulseDeck</a>
       <p>Designed and engineered by <a href="https://roszhan.vercel.app" target="_blank" rel="noopener">Roszhan Raj</a>. Demo data and photography from Unsplash.</p>
     </div>
     <div class="footer-links">

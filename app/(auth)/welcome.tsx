@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, Text } from '@/components/ui';
+import { BrandMark, Button, Text } from '@/components/ui';
 import { useAuthActions } from '@/features/auth/session';
 import { useReducedMotionPref } from '@/hooks/useMotion';
 import { unsplash } from '@/lib/images';
@@ -46,9 +46,7 @@ export default function Welcome() {
       <View style={[styles.bottom, { paddingBottom: insets.bottom + space.lg }]}>
         <Animated.View entering={reduced ? undefined : FadeInDown.duration(duration.large).easing(easing.enter).delay(200)} style={{ gap: space.sm }}>
           <View style={styles.brand}>
-            <LinearGradient colors={gradients.pulse} style={styles.logo}>
-              <Text style={{ fontSize: 18 }}>⚡</Text>
-            </LinearGradient>
+            <BrandMark size={34} />
             <Text variant="h3">PulseDeck</Text>
           </View>
           <Text variant="display">Tiny daily challenges for your favorite people.</Text>
@@ -98,5 +96,4 @@ const styles = StyleSheet.create({
   cardLabel: { position: 'absolute', left: space.sm, right: space.sm, bottom: space.sm, fontFamily: 'Inter_600SemiBold' },
   bottom: { paddingHorizontal: layout.screenPadding },
   brand: { flexDirection: 'row', alignItems: 'center', gap: space.xs, marginBottom: space.xs },
-  logo: { width: 32, height: 32, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
 });

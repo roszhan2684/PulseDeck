@@ -15,5 +15,6 @@ Ordered by portfolio impact. Status as of 2026-10-31.
 4. **Hosted Supabase** — create a free project, apply migrations + seed, set `.env`, verify two-device realtime chat, reconnect backfill and leaderboard events; wire the `notify-challenge` webhook.
 5. **Private media** — move the `submissions` bucket to private + signed URLs via a membership-checked RPC (ADR-007).
 6. **TestFlight** — needs an Apple Developer account ($99/yr; skip until ready). Then Apple Sign In (ADR-008).
-7. **Polish backlog** — per-group challenge scheduling UI for admins, comment threads on submissions, Android pass, CI (GitHub Actions: typecheck, lint, jest, SQL verify).
-8. **Resume** — rewrite bullets with the measured numbers from step 2 only.
+7. **iOS 26 layered icon** — rebuild `brand/` layers (gradient fill, ghost card, front card + pulse) in Apple’s free Icon Composer and point `ios.icon` at the `.icon` bundle for the liquid-glass treatment.
+8. **Polish backlog** — per-group challenge scheduling UI for admins, comment threads on submissions, Android pass, CI (GitHub Actions: typecheck, lint, jest, SQL verify).
+9. **Resume** — rewrite bullets with the measured numbers from step 2 only.

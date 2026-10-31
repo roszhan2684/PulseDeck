@@ -15,3 +15,4 @@ export * from './Screen';
 export * from './SegmentedControl';
 export * from './SectionHeader';
 export * from './TabBar';
+export * from './BrandMark';
